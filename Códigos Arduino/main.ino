@@ -11,6 +11,9 @@
 #define LDR_PIN A0
 #define UTC_OFFSET -3
 
+// botao
+int pushbutton = 2;
+
 // Cria objeto RTC
 RTC_DS1307 RTC;
 
@@ -227,6 +230,9 @@ void setup() {
   // buzzer
   pinMode(buzzer,OUTPUT); 
 
+  // botao
+  pinMode(pushbutton, INPUT_PULLUP); // define o pino do botao como entrada
+
   // LEDs
   pinMode(redPin, OUTPUT);
   pinMode(yellowPin, OUTPUT);
@@ -256,10 +262,22 @@ void getNextAddress() {
     }
 }
 
+
 void loop() {
   mostrarGravarSensores();
-  
+
+  // limpa a memoria do eeprom
+  int j = 0;
+  if (digitalRead(pushbutton) == LOW){
+    for (int j = 0; j <= currentAddress; j++){
+      EEPROM.write(j, 0); // limpando
+    }
+    currentAddress = 0; // resetando address
+    Serial.println("Limpando memória... Resetando EEPRON...\n");
+    delay(4000); 
+  }
 }
+
 
 void mostrarGravarSensores() {
   /*   DHT   */
