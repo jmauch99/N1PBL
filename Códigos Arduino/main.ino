@@ -6,7 +6,8 @@
 
 // Define a ligação ao pino de dados do sensor
 #define DHTPIN 4
-#define DHTTYPE DHT22
+#define DHTTYPE DHT22 // Simulador
+// #define DHTTYPE DHT11 // Bancada
 #define LDR_PIN A0
 #define UTC_OFFSET -3
 
@@ -355,7 +356,8 @@ void mostrarGravarSensores() {
   
   if (secondAsInt % 5 == 0)  // Gravando os dados a cada 5s
   {
-    delay(500);
+
+    delay(1000);  // delay para poder gravar apenas 1 registro por segundo
 
     // gravando na memória
     EEPROM.write(currentAddress, t);
@@ -391,7 +393,7 @@ void mostrarGravarSensores() {
         else if (i == currentAddress - 1) {
               EEPROM.get(i, storedTime); // lendo dados de hora do eeprom
               // Exibe os valores lidos
-              Serial.print(" | Data e Hora: ");
+              Serial.print("| Data e Hora: ");
               Serial.print(storedTime.day);
               Serial.print("/");
               Serial.print(storedTime.month);
@@ -404,14 +406,10 @@ void mostrarGravarSensores() {
               Serial.print(":");
               Serial.println(storedTime.second);
         }
-
     }
-    
+
     getNextAddress();
     Serial.println("");
+
   }
 }
-
-
-
-
