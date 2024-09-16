@@ -1,6 +1,6 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
-#include <DHT.h> // Carrega a biblioteca DHT
+#include <DHT.h> 
 #include <RTClib.h>
 #include <EEPROM.h>
 
@@ -274,7 +274,12 @@ void loop() {
     }
     currentAddress = 0; // resetando address
     Serial.println("Limpando memória... Resetando EEPRON...\n");
+    
+    lcd.clear();
+    lcd.print("Reset EEPRON...");
+
     delay(4000); 
+    lcd.clear();
   }
 }
 
@@ -326,7 +331,7 @@ void mostrarGravarSensores() {
   l = map(ValorLDR, 0, 1023, 100, 0); // Converte o valor para uma escala de 0 a 100
 
   // Condições boas
-  if ((t >= 18 && t <= 22) && (h >= 36 && h <= 44) && (l >= 5 && l <= 25))
+  if ((t > 17 && t < 23) && (h >= 36 && h <= 44) && (l >= 5 && l <= 25))
   {     
         digitalWrite(redPin, LOW); 
         digitalWrite(yellowPin, LOW); 
@@ -359,6 +364,14 @@ void mostrarGravarSensores() {
   now = now.unixtime() + offsetSeconds; // Adicionando o deslocamento ao tempo atual
   DateTime adjustedTime = DateTime(now);
 
+  String dateStr = String(adjustedTime.day()) + "/" +
+                   String(adjustedTime.month()) + "/" +
+                   String(adjustedTime.year());
+
+  String timeStr = (adjustedTime.hour() < 10 ? "0" : "") + String(adjustedTime.hour()) + ":" +
+                   (adjustedTime.minute() < 10 ? "0" : "") + String(adjustedTime.minute()) + ":" +
+                   (adjustedTime.second() < 10 ? "0" : "") + String(adjustedTime.second());
+
   // Preenche a estrutura com os valores de data e hora
   DateTimeStruct currentTime;
   currentTime.day = adjustedTime.day();
@@ -374,8 +387,16 @@ void mostrarGravarSensores() {
   
   if (secondAsInt % 5 == 0)  // Gravando os dados a cada 5s
   {
+    lcd.clear();
+    lcd.setCursor(0, 0); 
+    lcd.print("Data: " + dateStr);
 
-    delay(1000);  // delay para poder gravar apenas 1 registro por segundo
+    lcd.setCursor(0, 1);  
+    lcd.print("Hora: " + timeStr);
+     
+    // delay para poder gravar apenas 1 registro por segundo
+    delay(1000);  
+    lcd.clear();
 
     // gravando na memória
     EEPROM.write(currentAddress, t);
@@ -397,7 +418,7 @@ void mostrarGravarSensores() {
         DateTimeStruct storedTime;
 
         if (i == currentAddress - 4) {
-            Serial.print(EEPROM.read(i)); // lendo dados de temp do eeprom
+            Serial.print(round(EEPROM.read(i)), 1); // lendo dados de temp do eeprom
             Serial.print("°C/t ");
         }
         else if (i == currentAddress - 3) {
