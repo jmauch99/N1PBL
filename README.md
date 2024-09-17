@@ -3,25 +3,65 @@
 **Descrição**
 Este projeto utiliza um Arduino como unidade de controle principal para monitorar parâmetros ambientais, como temperatura, umidade e intensidade luminosa. Os sensores conectados ao Arduino realizam as medições, com os dados sendo exibidos em um display LCD e armazenados em uma memória EEPROM para consulta futura. Além disso, os LEDs fornecem feedback visual sobre se os valores estão dentro dos limites desejados, enquanto o RTC (Relógio de Tempo Real) registra o horário de cada medição.
 
-**Componentes Utilizados**
+**Componentes Utilizados**:
+
 Arduino – Microcontrolador responsável pelo controle do circuito.
+
 DHT11 – Sensor de temperatura e umidade.
+
 LEDs – Indicadores para sinalizar se os valores obtidos estão dentro dos parâmetros ideais.
+
 LDR – Sensor de intensidade luminosa.
+
 RTC – Relógio em tempo real, mantém a hora e a data atualizadas mesmo com o sistema desligado.
+
 EEPROM – Memória para armazenar dados de temperatura, umidade e luminosidade.
+
 Resistores – Limitam a corrente para os LEDs e o LDR.
+
 Protoboard e Jumpers – Utilizados para realizar as conexões.
+
 Bateria (Fonte de Alimentação) – Fonte de 5V para alimentar o Arduino e os componentes.
+
 Botão Reset – Responsável por resetar a memória da EEPROM.
+
 LCD I2C – Display LCD para exibir as informações fornecidas pelo código.
+
 Buzzer – Emite um som de alerta quando os dados estão fora dos padrões predefinidos.
-Especificações
-Níveis dos Triggers (Gatilhos) Adotados:
+
+
+**Especificações**
+
+**Níveis dos Triggers (Gatilhos) Adotados:**
 
 Faixa de Temperatura: 15 °C < t < 25 °C
 Faixa de Luminosidade: 0% < l < 30%
 Faixa de Umidade: 30% < u < 50%
+
+**Margem de Erro e Temperatura Máxima de Uso para Sensores DHT11 e LDR**
+
+Sensor DHT11 (Umidade e Temperatura)
+
+**Margem de Erro:**
+Umidade: ±5%
+Temperatura: ±2°C
+
+**Temperatura Máxima de Uso:**
+A temperatura máxima de operação do DHT11 varia entre fabricantes, mas geralmente fica em torno de 40°C a 60°C. É crucial consultar a documentação específica do seu sensor para obter a informação exata. Exceder essa temperatura pode levar à degradação do sensor e à obtenção de leituras imprecisas.
+
+**Sensor LDR (Resistor Dependente da Luz)**
+
+**Margem de Erro:**
+
+A margem de erro de um LDR é mais complexa de definir, pois depende de diversos fatores, como:
+Iluminação ambiente: A relação entre a resistência e a intensidade luminosa não é linear, variando de acordo com o tipo de LDR e a faixa de luminosidade.
+Temperatura: A resistência do LDR também varia com a temperatura, o que pode introduzir erros nas medições.
+Histerese: Alguns LDRs apresentam histerese, ou seja, a resistência para um determinado nível de luz pode ser diferente dependendo se a luz está aumentando ou diminuindo.
+Geralmente, a margem de erro de um LDR é considerada alta em comparação com outros tipos de sensores.
+
+**Temperatura Máxima de Uso:**
+
+A temperatura máxima de uso de um LDR varia de acordo com o material utilizado em sua fabricação. É fundamental consultar a datasheet do sensor específico para obter essa informação. No entanto, a maioria dos LDRs pode operar em uma ampla faixa de temperatura, desde temperaturas abaixo de zero até altas temperaturas, sem que suas características sejam significativamente afetadas.
 
 **Explicação do Código**
 As principais bibliotecas utilizadas foram:
