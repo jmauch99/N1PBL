@@ -4,12 +4,13 @@
 #include <RTClib.h>
 #include <EEPROM.h>
 
+
 // Define a ligação ao pino de dados do sensor
 #define DHTPIN 4
-#define DHTTYPE DHT22 // Simulador
-// #define DHTTYPE DHT11 // Bancada
+// #define DHTTYPE DHT22 // Simulador
+#define DHTTYPE DHT11 // Bancada
 #define LDR_PIN A0
-#define UTC_OFFSET -3
+#define UTC_OFFSET +0
 
 // botao
 int pushbutton = 2;
@@ -154,7 +155,9 @@ struct DateTimeStruct {
 };
 
 void setup() {
-  lcd.begin(16, 2);              
+  //lcd.begin(16, 2);              
+  lcd.init();         // Inicializa LCD
+
   lcd.clear();
   lcd.backlight();    // Liga luz do LCD
 
@@ -240,7 +243,7 @@ void setup() {
 
 
   Serial.begin(9600); // Inicializa a serial
-  lcd.init();         // Inicializa LCD
+  // lcd.init();         // Inicializa LCD
 
   // Cria os caracteres customizados
   lcd.createChar(3, Grau);
@@ -273,10 +276,10 @@ void loop() {
       EEPROM.write(j, 0); // limpando
     }
     currentAddress = 0; // resetando address
-    Serial.println("Limpando memória... Resetando EEPRON...\n");
+    Serial.println("Limpando memória... Resetando EEPROM...\n");
     
     lcd.clear();
-    lcd.print("Reset EEPRON...");
+    lcd.print("Reset EEPROM...");
 
     delay(4000); 
     lcd.clear();
@@ -312,7 +315,7 @@ void mostrarGravarSensores() {
 
   /*  LDR   */
   ValorLDR = analogRead(LDR_PIN); // Lê o valor do sensor LDR
-  IntensidadeLuz = map(ValorLDR, 0, 1023, 100, 0); // Converte o valor para uma escala de 0 a 100
+  IntensidadeLuz = map(ValorLDR, 950, 1, 100, 0); // Converte o valor para uma escala de 0 a 100
 
   lcd.setCursor(0, 1);
   lcd.print("Lumi: ");
@@ -322,13 +325,13 @@ void mostrarGravarSensores() {
   /*Serial.print("Intensidade de Luz 0 - 1023 = ");
   Serial.println(ValorLDR);
   Serial.print("Intensidade de Luz 0 - 100% = ");
-  Serial.println(IntensidadeLuz);*/
-
+  Serial.println(IntensidadeLuz);
+  */
 
   /*  ALERTAS   */
 
   ValorLDR = analogRead(LDR_PIN); // Lê o valor do sensor LDR
-  l = map(ValorLDR, 0, 1023, 100, 0); // Converte o valor para uma escala de 0 a 100
+  l = map(ValorLDR,  950, 1, 100, 0); // Converte o valor para uma escala de 0 a 100
 
   // Condições boas
   if ((t > 17 && t < 23) && (h >= 36 && h <= 44) && (l >= 5 && l <= 25))
@@ -345,7 +348,7 @@ void mostrarGravarSensores() {
 
         // buzzer alerta
         tone(buzzer,5000); 
-        delay(150);
+        delay(50);
         noTone(buzzer); 
   } 
   // Condições de alerta
